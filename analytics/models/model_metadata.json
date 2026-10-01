@@ -1,0 +1,72 @@
+{
+  "model": "RandomForestRegressor",
+  "training_records": 5000,
+  "test_records": 1000,
+  "mae": 4.67,
+  "rmse": 5.71,
+  "r2": 0.8981,
+  "features": [
+    "queue_length",
+    "people_served",
+    "average_service_time",
+    "day_of_week",
+    "hour",
+    "is_peak_hour",
+    "facility_Admin Office",
+    "facility_Bus Stop",
+    "facility_Canteen",
+    "facility_Computer Lab",
+    "facility_Library",
+    "facility_Printing Shop"
+  ],
+  "feature_importance": [
+    {
+      "feature": "queue_length",
+      "importance": 0.6508
+    },
+    {
+      "feature": "average_service_time",
+      "importance": 0.30433
+    },
+    {
+      "feature": "people_served",
+      "importance": 0.012996
+    },
+    {
+      "feature": "hour",
+      "importance": 0.011945
+    },
+    {
+      "feature": "day_of_week",
+      "importance": 0.009902
+    },
+    {
+      "feature": "is_peak_hour",
+      "importance": 0.004796
+    },
+    {
+      "feature": "facility_Computer Lab",
+      "importance": 0.001212
+    },
+    {
+      "feature": "facility_Library",
+      "importance": 0.001123
+    },
+    {
+      "feature": "facility_Canteen",
+      "importance": 0.001116
+    },
+    {
+      "feature": "facility_Printing Shop",
+      "importance": 0.000882
+    },
+    {
+      "feature": "facility_Admin Office",
+      "importance": 0.000572
+    },
+    {
+      "feature": "facility_Bus Stop",
+      "importance": 0.000326
+    }
+  ]
+}
