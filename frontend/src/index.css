@@ -1,0 +1,9 @@
+/* Replaces the Vite default: it forced #root to 1126px, centered, with side borders. */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;background:#f3f5f2;color:#10231f;-webkit-font-smoothing:antialiased}
+#root{width:100%;min-height:100svh}
+button,input,select{font-family:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid #0e7c66;outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
