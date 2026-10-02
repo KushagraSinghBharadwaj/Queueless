@@ -1,25 +1,56 @@
+from pathlib import Path
+
 import pandas as pd
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 
-# Load dataset
-df = pd.read_csv("analytics/data/raw/queue_data.csv")
+BASE_DIR = Path(__file__).resolve().parents[2]
 
-
-# Calculate baseline prediction
-df["baseline_wait_time"] = (
-    df["queue_length"] *
-    df["average_service_time"]
+DATASET_PATH = (
+    BASE_DIR
+    / "analytics"
+    / "data"
+    / "processed"
+    / "queue_data_clean.csv"
 )
 
 
-# Calculate error
-mae = mean_absolute_error(
-    df["wait_time"],
-    df["baseline_wait_time"]
-)
+def main():
+
+    print("\n========================================")
+    print("QUEUELESS BASELINE EVALUATION")
+    print("========================================")
+
+    df = pd.read_csv(DATASET_PATH)
+
+    # Simple queueing formula:
+    # estimated wait = people ahead × average service time
+    baseline_predictions = (
+        df["position"]
+        * df["average_service_time"]
+    )
+
+    actual = df["wait_time"]
+
+    mae = mean_absolute_error(
+        actual,
+        baseline_predictions
+    )
+
+    rmse = mean_squared_error(
+        actual,
+        baseline_predictions
+    ) ** 0.5
+
+    print(f"\nRecords evaluated: {len(df)}")
+
+    print("\nBaseline Results")
+    print("----------------------------------------")
+    print(f"MAE:  {mae:.2f} minutes")
+    print(f"RMSE: {rmse:.2f} minutes")
+
+    print("\n✅ BASELINE EVALUATION COMPLETED")
 
 
-print("Baseline Model")
-print("-------------------------")
-print(f"Mean Absolute Error: {mae:.2f} minutes")
+if __name__ == "__main__":
+    main()
