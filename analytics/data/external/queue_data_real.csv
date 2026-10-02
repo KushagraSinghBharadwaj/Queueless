@@ -1,0 +1,6 @@
+record_id,timestamp,facility_id,facility,queue_length,position,people_served,service_time,average_service_time,recent_service_rate,day_of_week,hour,is_weekend,is_peak_hour,wait_time
+REAL001,2026-10-01 10:00:00,CANTEEN,Canteen,12,8,25,2.4,2.5,24.0,3,10,0,1,30.2
+REAL002,2026-10-01 10:15:00,CANTEEN,Canteen,18,12,31,2.6,2.5,24.0,3,10,0,1,44.8
+REAL003,2026-10-01 11:00:00,LIBRARY,Library,5,3,12,3.8,4.0,15.0,3,11,0,1,19.5
+REAL004,2026-10-01 14:00:00,ADMIN,Admin Office,7,5,10,4.7,5.0,12.0,3,14,0,1,36.1
+REAL005,2026-10-01 16:00:00,PRINT,Printing Shop,3,2,8,2.9,3.0,20.0,3,16,0,1,9.4

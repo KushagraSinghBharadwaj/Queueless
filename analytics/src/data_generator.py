@@ -4,70 +4,80 @@ from datetime import datetime, timedelta
 
 random.seed(42)
 
-# Facility-specific configuration
+# ---------------------------------------------------------
+# FACILITY CONFIGURATION
+# ---------------------------------------------------------
+
 facilities = {
     "Canteen": {
+        "id": "CANTEEN",
         "base_queue": 10,
         "service_time": 2.5,
         "service_variation": 0.5
     },
     "Library": {
+        "id": "LIBRARY",
         "base_queue": 7,
         "service_time": 4.0,
         "service_variation": 0.8
     },
     "Printing Shop": {
+        "id": "PRINT",
         "base_queue": 5,
         "service_time": 3.0,
         "service_variation": 0.6
     },
     "Admin Office": {
+        "id": "ADMIN",
         "base_queue": 4,
         "service_time": 5.0,
         "service_variation": 1.0
     },
     "Computer Lab": {
+        "id": "LAB",
         "base_queue": 8,
         "service_time": 3.5,
         "service_variation": 0.7
     },
     "Bus Stop": {
+        "id": "BUS",
         "base_queue": 12,
         "service_time": 1.5,
         "service_variation": 0.3
     }
 }
 
-start_date = datetime(2026, 1, 1)
+START_DATE = datetime(2026, 1, 1)
+NUMBER_OF_RECORDS = 2000
 
 data = []
 
-for i in range(5000):
+# ---------------------------------------------------------
+# DATA GENERATION
+# ---------------------------------------------------------
 
-    # Generate a realistic campus date and time
+for i in range(NUMBER_OF_RECORDS):
+
     day_offset = random.randint(0, 59)
 
     hour = random.randint(8, 17)
     minute = random.choice([0, 15, 30, 45])
 
-    timestamp = start_date + timedelta(
+    timestamp = START_DATE + timedelta(
         days=day_offset,
         hours=hour,
         minutes=minute
     )
 
     facility = random.choice(list(facilities.keys()))
-
     config = facilities[facility]
 
     day_of_week = timestamp.weekday()
-
-    # Weekend indicator
     is_weekend = day_of_week >= 5
 
-    # -------------------------------------------------
-    # FACILITY-SPECIFIC TRAFFIC PATTERNS
-    # -------------------------------------------------
+    # -----------------------------------------------------
+    # FACILITY TRAFFIC PATTERNS
+    # -----------------------------------------------------
 
     traffic_multiplier = 1.0
 
@@ -109,13 +119,13 @@ for i in range(5000):
         elif 16 <= hour <= 17:
             traffic_multiplier = 2.2
 
-    # Lower campus activity on weekends
+    # Lower activity on weekends
     if is_weekend:
         traffic_multiplier *= 0.6
 
-    # -------------------------------------------------
-    # GENERATE QUEUE LENGTH
-    # -------------------------------------------------
+    # -----------------------------------------------------
+    # QUEUE LENGTH
+    # -----------------------------------------------------
 
     expected_queue = config["base_queue"] * traffic_multiplier
 
@@ -128,29 +138,69 @@ for i in range(5000):
 
     queue_length = max(0, min(queue_length, 50))
 
-    # -------------------------------------------------
+    # -----------------------------------------------------
     # SERVICE TIME
-    # -------------------------------------------------
+    # -----------------------------------------------------
 
-    average_service_time = random.gauss(
+    service_time = random.gauss(
         config["service_time"],
         config["service_variation"]
     )
 
-    average_service_time = max(
-        0.8,
-        round(average_service_time, 2)
+    service_time = max(0.8, round(service_time, 2))
+
+    # Average service time with small historical variation
+    average_service_time = round(
+        max(
+            0.8,
+            random.gauss(
+                config["service_time"],
+                config["service_variation"] * 0.5
+            )
+        ),
+        2
     )
 
-    # -------------------------------------------------
+    # -----------------------------------------------------
+    # SERVICE RATE
+    # -----------------------------------------------------
+
+    # Approximate number of people that can be served per hour
+    recent_service_rate = round(
+        60 / average_service_time,
+        2
+    )
+
+    # -----------------------------------------------------
     # PEOPLE SERVED
-    # -------------------------------------------------
+    # -----------------------------------------------------
 
-    people_served = random.randint(1, 10)
+    expected_people_served = (
+        recent_service_rate / 4
+    )
 
-    # -------------------------------------------------
+    people_served = max(
+        0,
+        int(
+            random.gauss(
+                expected_people_served,
+                max(1, expected_people_served * 0.2)
+            )
+        )
+    )
+
+    # -----------------------------------------------------
+    # POSITION
+    # -----------------------------------------------------
+
+    if queue_length > 0:
+        position = random.randint(1, queue_length)
+    else:
+        position = 0
+
+    # -----------------------------------------------------
     # PEAK HOUR
-    # -------------------------------------------------
+    # -----------------------------------------------------
 
     is_peak_hour = (
         (10 <= hour <= 11)
@@ -160,47 +210,69 @@ for i in range(5000):
         (16 <= hour <= 17)
     )
 
-    # -------------------------------------------------
+    # -----------------------------------------------------
     # WAIT TIME
-    # -------------------------------------------------
+    # -----------------------------------------------------
 
+    # Approximate waiting time based on people ahead
     wait_time = (
         queue_length
         * average_service_time
     )
 
-    # Add realistic variation
-    wait_time += random.uniform(-8, 8)
+    # Small real-world variation
+    wait_time += random.uniform(-5, 5)
 
-    # Slight additional congestion during peak hours
+    # Congestion during peak periods
     if is_peak_hour:
-        wait_time *= random.uniform(1.05, 1.20)
+        wait_time *= random.uniform(1.05, 1.15)
+
+    # Weekend activity is lower
+    if is_weekend:
+        wait_time *= random.uniform(0.85, 0.95)
 
     wait_time = max(
         0,
         round(wait_time, 2)
     )
 
+    # -----------------------------------------------------
+    # RECORD
+    # -----------------------------------------------------
+
     data.append({
+        "record_id": f"QL-{i + 1:06d}",
         "timestamp": timestamp,
+        "facility_id": config["id"],
         "facility": facility,
         "queue_length": queue_length,
+        "position": position,
         "people_served": people_served,
+        "service_time": service_time,
         "average_service_time": average_service_time,
+        "recent_service_rate": recent_service_rate,
         "day_of_week": day_of_week,
         "hour": hour,
+        "is_weekend": is_weekend,
         "is_peak_hour": is_peak_hour,
-        "wait_time": wait_time
+        "wait_time": wait_time,
+        "data_source": "synthetic"
     })
 
 
-# Create DataFrame
+# ---------------------------------------------------------
+# CREATE DATAFRAME
+# ---------------------------------------------------------
+
 df = pd.DataFrame(data)
 
 # Sort chronologically
 df = df.sort_values("timestamp").reset_index(drop=True)
 
-# Save dataset
+# ---------------------------------------------------------
+# SAVE DATASET
+# ---------------------------------------------------------
+
 output_path = "analytics/data/raw/queue_data.csv"
 
 df.to_csv(
@@ -208,11 +280,22 @@ df.to_csv(
     index=False
 )
 
-print("Dataset generated successfully!")
+# ---------------------------------------------------------
+# REPORT
+# ---------------------------------------------------------
+
+print("\n========================================")
+print("QUEUELESS DATASET GENERATED")
+print("========================================")
+
 print(f"Records: {len(df)}")
+print(f"Columns: {len(df.columns)}")
 print(f"Saved to: {output_path}")
 
-print("\nFirst 5 rows:")
+print("\nColumns:")
+print(df.columns.tolist())
+
+print("\nFirst 5 records:")
 print(df.head())
 
 print("\nFacility distribution:")
@@ -225,9 +308,18 @@ print(
     .round(2)
 )
 
-print("\nAverage wait time by peak hour:")
+print("\nAverage queue by facility:")
+print(
+    df.groupby("facility")["queue_length"]
+    .mean()
+    .round(2)
+)
+
+print("\nPeak vs non-peak:")
 print(
     df.groupby("is_peak_hour")["wait_time"]
     .mean()
     .round(2)
 )
+
+print("\nDataset generation completed successfully!")

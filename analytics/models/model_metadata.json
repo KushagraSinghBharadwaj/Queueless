@@ -1,17 +1,23 @@
 {
   "model": "RandomForestRegressor",
-  "training_records": 5000,
-  "test_records": 1000,
-  "mae": 4.67,
-  "rmse": 5.71,
-  "r2": 0.8981,
+  "training_records": 2000,
+  "test_records": 400,
+  "mae": 2.8,
+  "rmse": 3.38,
+  "r2": 0.963,
   "features": [
     "queue_length",
+    "position",
     "people_served",
     "average_service_time",
+    "recent_service_rate",
     "day_of_week",
     "hour",
+    "is_weekend",
     "is_peak_hour",
+    "queue_pressure",
+    "people_ahead",
+    "service_rate",
     "facility_Admin Office",
     "facility_Bus Stop",
     "facility_Canteen",
@@ -21,52 +27,76 @@
   ],
   "feature_importance": [
     {
-      "feature": "queue_length",
-      "importance": 0.6508
-    },
-    {
-      "feature": "average_service_time",
-      "importance": 0.30433
-    },
-    {
-      "feature": "people_served",
-      "importance": 0.012996
-    },
-    {
-      "feature": "hour",
-      "importance": 0.011945
+      "feature": "queue_pressure",
+      "importance": 0.971075
     },
     {
       "feature": "day_of_week",
-      "importance": 0.009902
+      "importance": 0.004398
+    },
+    {
+      "feature": "hour",
+      "importance": 0.004153
     },
     {
       "feature": "is_peak_hour",
-      "importance": 0.004796
+      "importance": 0.003168
     },
     {
-      "feature": "facility_Computer Lab",
-      "importance": 0.001212
+      "feature": "people_served",
+      "importance": 0.002877
+    },
+    {
+      "feature": "average_service_time",
+      "importance": 0.002348
+    },
+    {
+      "feature": "position",
+      "importance": 0.00208
+    },
+    {
+      "feature": "people_ahead",
+      "importance": 0.002052
+    },
+    {
+      "feature": "recent_service_rate",
+      "importance": 0.001837
+    },
+    {
+      "feature": "service_rate",
+      "importance": 0.001695
+    },
+    {
+      "feature": "is_weekend",
+      "importance": 0.001603
+    },
+    {
+      "feature": "queue_length",
+      "importance": 0.000734
     },
     {
       "feature": "facility_Library",
-      "importance": 0.001123
+      "importance": 0.000488
     },
     {
-      "feature": "facility_Canteen",
-      "importance": 0.001116
+      "feature": "facility_Computer Lab",
+      "importance": 0.000417
     },
     {
       "feature": "facility_Printing Shop",
-      "importance": 0.000882
+      "importance": 0.000415
+    },
+    {
+      "feature": "facility_Canteen",
+      "importance": 0.000411
     },
     {
       "feature": "facility_Admin Office",
-      "importance": 0.000572
+      "importance": 0.00021
     },
     {
       "feature": "facility_Bus Stop",
-      "importance": 0.000326
+      "importance": 4e-05
     }
   ]
 }

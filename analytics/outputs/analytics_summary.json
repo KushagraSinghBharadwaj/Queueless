@@ -1,0 +1,117 @@
+{
+    "overall": {
+        "total_records": 10000,
+        "average_wait_time": 27.62,
+        "maximum_wait_time": 131.46,
+        "average_queue_length": 9.36,
+        "total_people_served": 49313
+    },
+    "facility_statistics": [
+        {
+            "facility": "Canteen",
+            "average_wait_time": 34.84,
+            "average_queue_length": 13.17,
+            "average_service_time": 2.5,
+            "total_people_served": 9654
+        },
+        {
+            "facility": "Library",
+            "average_wait_time": 33.24,
+            "average_queue_length": 7.93,
+            "average_service_time": 4.0,
+            "total_people_served": 5594
+        },
+        {
+            "facility": "Computer Lab",
+            "average_wait_time": 32.2,
+            "average_queue_length": 8.76,
+            "average_service_time": 3.5,
+            "total_people_served": 6140
+        },
+        {
+            "facility": "Bus Stop",
+            "average_wait_time": 25.37,
+            "average_queue_length": 16.15,
+            "average_service_time": 1.5,
+            "total_people_served": 16281
+        },
+        {
+            "facility": "Admin Office",
+            "average_wait_time": 22.05,
+            "average_queue_length": 4.15,
+            "average_service_time": 4.99,
+            "total_people_served": 4181
+        },
+        {
+            "facility": "Printing Shop",
+            "average_wait_time": 17.69,
+            "average_queue_length": 5.54,
+            "average_service_time": 3.01,
+            "total_people_served": 7463
+        }
+    ],
+    "peak_statistics": [
+        {
+            "is_peak_hour": false,
+            "average_wait_time": 22.72,
+            "average_queue_length": 8.42
+        },
+        {
+            "is_peak_hour": true,
+            "average_wait_time": 29.68,
+            "average_queue_length": 9.76
+        }
+    ],
+    "hourly_statistics": [
+        {
+            "hour": 8,
+            "average_wait_time": 21.24,
+            "average_queue_length": 8.46
+        },
+        {
+            "hour": 9,
+            "average_wait_time": 22.1,
+            "average_queue_length": 8.49
+        },
+        {
+            "hour": 10,
+            "average_wait_time": 26.88,
+            "average_queue_length": 8.06
+        },
+        {
+            "hour": 11,
+            "average_wait_time": 27.79,
+            "average_queue_length": 8.24
+        },
+        {
+            "hour": 12,
+            "average_wait_time": 31.31,
+            "average_queue_length": 10.05
+        },
+        {
+            "hour": 13,
+            "average_wait_time": 26.77,
+            "average_queue_length": 9.33
+        },
+        {
+            "hour": 14,
+            "average_wait_time": 32.65,
+            "average_queue_length": 10.5
+        },
+        {
+            "hour": 15,
+            "average_wait_time": 24.86,
+            "average_queue_length": 8.3
+        },
+        {
+            "hour": 16,
+            "average_wait_time": 32.2,
+            "average_queue_length": 11.12
+        },
+        {
+            "hour": 17,
+            "average_wait_time": 29.85,
+            "average_queue_length": 10.93
+        }
+    ]
+}

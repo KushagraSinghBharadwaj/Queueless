@@ -1,45 +1,41 @@
 import pandas as pd
 
 
-# Load the dataset
-df = pd.read_csv("analytics/data/raw/queue_data.csv")
+def create_features(df):
 
+    data = df.copy()
 
-# Convert facility names into numerical columns
-df = pd.get_dummies(
-    df,
-    columns=["facility"],
-    dtype=int
-)
+    # Convert timestamp
+    data["timestamp"] = pd.to_datetime(data["timestamp"])
 
+    # Time-based features
+    data["day_of_week"] = data["timestamp"].dt.dayofweek
+    data["hour"] = data["timestamp"].dt.hour
+    data["is_weekend"] = (data["day_of_week"] >= 5).astype(int)
 
-# Select features for the ML model
-features = [
-    "queue_length",
-    "people_served",
-    "average_service_time",
-    "day_of_week",
-    "hour",
-    "is_peak_hour",
-    "facility_Admin Office",
-    "facility_Bus Stop",
-    "facility_Canteen",
-    "facility_Computer Lab",
-    "facility_Library",
-    "facility_Printing Shop"
-]
+    # Peak hour
+    data["is_peak_hour"] = (
+        data["hour"].isin([10, 11, 12, 13, 14, 16, 17])
+    ).astype(int)
 
+    # Queue pressure
+    data["queue_pressure"] = (
+        data["queue_length"] * data["average_service_time"]
+    )
 
-# Create feature matrix
-X = df[features]
+    # People ahead of the user
+    data["people_ahead"] = data["position"].clip(lower=0)
 
+    # Service efficiency
+    data["service_rate"] = (
+        60 / data["average_service_time"]
+    )
 
-# Create target variable
-y = df["wait_time"]
+    # Facility encoding
+    data = pd.get_dummies(
+        data,
+        columns=["facility"],
+        dtype=int
+    )
 
-
-print("Features prepared successfully!")
-print(f"Number of features: {X.shape[1]}")
-print(f"Number of records: {X.shape[0]}")
-print("\nFeature columns:")
-print(X.columns.tolist())
+    return data

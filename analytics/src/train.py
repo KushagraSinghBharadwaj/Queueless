@@ -14,11 +14,17 @@ METADATA_PATH = BASE_DIR / "analytics" / "models" / "model_metadata.json"
 
 FEATURES = [
     "queue_length",
+    "position",
     "people_served",
     "average_service_time",
+    "recent_service_rate",
     "day_of_week",
     "hour",
+    "is_weekend",
     "is_peak_hour",
+    "queue_pressure",
+    "people_ahead",
+    "service_rate",
     "facility_Admin Office",
     "facility_Bus Stop",
     "facility_Canteen",
@@ -30,7 +36,20 @@ FEATURES = [
 
 def main():
     df = pd.read_csv(DATASET_PATH)
+    df["timestamp"] = pd.to_datetime(df["timestamp"])
 
+    df = df.sort_values("timestamp").reset_index(drop=True)
+    df["queue_pressure"] = (
+    df["queue_length"] * df["average_service_time"]
+)
+
+    df["people_ahead"] = (
+        df["position"].clip(lower=0)
+    )
+
+    df["service_rate"] = (
+        60 / df["average_service_time"]
+    )
     df = pd.get_dummies(df, columns=["facility"], dtype=int)
 
     missing = [feature for feature in FEATURES if feature not in df.columns]
@@ -40,15 +59,17 @@ def main():
     X = df[FEATURES]
     y = df["wait_time"]
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X,
-        y,
-        test_size=0.20,
-        random_state=42,
-    )
+    # Time-aware train/test split
+    split_index = int(len(df) * 0.80)
+
+    X_train = X.iloc[:split_index]
+    X_test = X.iloc[split_index:]
+
+    y_train = y.iloc[:split_index]
+    y_test = y.iloc[split_index:]
 
     model = RandomForestRegressor(
-        n_estimators=200,
+        n_estimators=50,
         random_state=42,
         n_jobs=-1,
         min_samples_leaf=2,
